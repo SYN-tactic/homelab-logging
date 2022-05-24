@@ -1,0 +1,208 @@
+{
+  "extractors": [
+    {
+      "title": "log-data",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "log_data",
+      "extractor_config": {
+        "regex_value": "^filterlog\\[.+\\]: (.+)"
+      },
+      "condition_type": "none",
+      "condition_value": ""
+    },
+    {
+      "title": "ip-common-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "rule-number,sub-rule-number,anchor,tracker,real-interface,reason,action,direction,ip-version"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "log_data",
+      "target_field": "ip_common_data",
+      "extractor_config": {
+        "regex_value": "^(([^,]*,){8}([^,]*)),"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(([^,]*,){8}([^,]*)),"
+    },
+    {
+      "title": "ip-specific-data",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "log_data",
+      "target_field": "ip_specific_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){9}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){9}(.+)"
+    },
+    {
+      "title": "ipv4-data",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "log_data",
+      "target_field": "ipv4_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){9}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){8}4,(.+)"
+    },
+    {
+      "title": "ipv4-specific-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "tos,ecn,ttl,id,offset,flags,protocol-id,protocol-text,length,source-address,destination-address"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv4_data",
+      "target_field": "ipv4_specific_data",
+      "extractor_config": {
+        "regex_value": "^(([^,]*,){10}([^,]*)),"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(([^,]*,){10}([^,]*)),"
+    },
+    {
+      "title": "tcp-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "source-port,destination-port,data-length,tcp-flags,sequence-number,ack-number,tcp-window,urg,tcp-options"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv4_data",
+      "target_field": "tcp_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){11}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){7}tcp,(.+)"
+    },
+    {
+      "title": "udp-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "source-port,destination-port,data-length"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv4_data",
+      "target_field": "udp_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){11}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){7}udp,(.+)"
+    },
+    {
+      "title": "ipv6-data",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "log_data",
+      "target_field": "ipv6_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){9}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){8}6,(.+)"
+    },
+    {
+      "title": "ipv6-specific-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "class,flow-label,hop-limit,protocol-text,protocol-id,length,source-address,destination-address"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv6_data",
+      "target_field": "ipv6_specific_data",
+      "extractor_config": {
+        "regex_value": "^(([^,]*,){7}([^,]*))"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(([^,]*,){7}([^,]*))"
+    },
+    {
+      "title": "ipv6-udp-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "source-port,destination-port,data-length"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv6_data",
+      "target_field": "udp_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){8}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){3}UDP,(.+)"
+    },
+    {
+      "title": "ipv6-tcp-data",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "csv",
+          "config": {
+            "column_header": "source-port,destination-port,data-length,tcp-flags,sequence-number,ack-number,tcp-window,urg,tcp-options"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "ipv6_data",
+      "target_field": "tcp_data",
+      "extractor_config": {
+        "regex_value": "^(?:[^,]*,){8}(.+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^(?:[^,]*,){3}TCP,(.+)"
+    }
+  ],
+  "version": "4.2.7"
+}
